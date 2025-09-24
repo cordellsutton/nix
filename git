@@ -1,0 +1,20 @@
+git init
+
+git add .
+
+git status // to see what hasn't been committed
+git log //log of file changes
+
+if you don't have an ssh key set up on a new install
+generate a new ssh key
+
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+
+git remote add origin git@github.com:cordellsutton/nix.git
+//make sure the config file specifies this in .git, it defaults to https and
+//will ask for a password
+
+git push origin master
+
