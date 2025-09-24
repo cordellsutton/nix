@@ -16,5 +16,6 @@ git remote add origin git@github.com:cordellsutton/nix.git
 //make sure the config file specifies this in .git, it defaults to https and
 //will ask for a password
 
-git push origin master
+git push -u origin master //master is the name of the branch, so change that to
+whatever
 
