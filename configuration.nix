@@ -134,7 +134,9 @@
   	bat
 	tinycc
 	gnumake
-	bc	
+	bc
+	kitty	
+	netsurf.browser
 	];
 
   fonts.packages = with pkgs; [
