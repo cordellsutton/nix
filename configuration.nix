@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+	  ./network.nix
     ];
 
   # Bootloader.
@@ -45,22 +46,12 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = false;
+  programs.ssh.extraConfig = "AddKeysToAgent yes";
 
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Enable CUPS to print documents.
-  #services.printing.enable = true;
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -78,8 +69,6 @@
     #media-session.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.planimal = {
@@ -92,8 +81,6 @@
     ];
   };
 
-  # Install firefox.
-  programs.firefox.enable = false;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -135,8 +122,14 @@
 	tinycc
 	gnumake
 	bc
-	kitty	
-	netsurf.browser
+	gdb
+	octave
+	gnuplot
+	file
+	gnupg
+	pinentry-tty
+	texliveTeTeX
+	rustc
 	];
 
   fonts.packages = with pkgs; [
@@ -152,7 +145,8 @@
 	nerd-fonts.fira-code
   	nerd-fonts.droid-sans-mono	
 	];
-
+  fonts.fontconfig.useEmbeddedBitmaps = true;
+  fonts.fontconfig.antialias = true;
 
 #network
   # Some programs need SUID wrappers, can be configured further or are

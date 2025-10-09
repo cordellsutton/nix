@@ -10,6 +10,11 @@ generate a new ssh key
 
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
+//this needs to be done each time i guess
+
+
+git commit -m 
+//to apply all changes to the current git
 
 
 git remote add origin git@github.com:cordellsutton/nix.git
@@ -17,5 +22,6 @@ git remote add origin git@github.com:cordellsutton/nix.git
 //will ask for a password
 
 git push -u origin master //master is the name of the branch, so change that to
-whatever
+whatever. find your current branch via
+git branch
 
