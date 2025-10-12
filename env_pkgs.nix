@@ -45,5 +45,12 @@
    gdb
    octave
    gnuplot
+   file
+   gnupg
+   pinentry-tty
+   texliveTeTeX
+   go
+   minicom
+   qemu 
    ];
 }

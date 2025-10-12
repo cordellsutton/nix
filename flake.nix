@@ -16,7 +16,10 @@
 			nixosConfigurations = {
 				seras = lib.nixosSystem {
 					system = "x86_64-linux";
-					modules = [		./configuration.nix ./automount.nix
+					modules = [		./configuration.nix 
+									./automount.nix
+									./network.nix
+									./env_pkgs.nix
 								];
 					};
 			};

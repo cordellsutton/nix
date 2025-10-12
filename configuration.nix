@@ -8,7 +8,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-	  ./network.nix
     ];
 
   # Bootloader.
@@ -74,7 +73,7 @@
   users.users.planimal = {
     isNormalUser = true;
     description = "planimal";
-    extraGroups = [ "networkmanager" "wheel" "nixbld" ];
+    extraGroups = [ "networkmanager" "wheel" "nixbld" "dialout"];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
@@ -129,7 +128,8 @@
 	gnupg
 	pinentry-tty
 	texliveTeTeX
-	rustc
+	go
+	minicom
 	];
 
   fonts.packages = with pkgs; [
