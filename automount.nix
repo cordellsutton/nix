@@ -23,7 +23,7 @@
      "defaults"     
      "users" # Allows any user to mount and unmount
      "nofail" # Prevent system from failing if this drive doesn't mount
-     
+	 "rw"     
    ];
  };
 #  fileSystems."/mnt/hdd" = {

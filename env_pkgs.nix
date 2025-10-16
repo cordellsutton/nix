@@ -4,6 +4,9 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+   ffmpeg
+   usbutils
+   yt-dlp
    inetutils	
    librewolf
    vim
