@@ -11,9 +11,9 @@
    fsType = "ext4";
    options = [ 
      "defaults"     
-     "users" # Allows any user to mount and unmount
-     "nofail" # Prevent system from failing if this drive doesn't mount
-     
+     "users" 
+     "nofail" 
+	 "exec"     
    ];
  };
   fileSystems."/mnt/nvme" = {
@@ -21,19 +21,10 @@
    fsType = "ext4";
    options = [ 
      "defaults"     
-     "users" # Allows any user to mount and unmount
-     "nofail" # Prevent system from failing if this drive doesn't mount
+     "users" 
+     "nofail" 
 	 "rw"     
+	 "exec"     
    ];
  };
-#  fileSystems."/mnt/hdd" = {
-#   device = "/dev/disk/by-partuuid/234a1a82-01";
-#   fsType = "ext4";
-#   options = [ 
-#     "defaults"     
-#     "users" # Allows any user to mount and unmount
-#     "nofail" # Prevent system from failing if this drive doesn't mount
-#     
-#   ];
-# };
 }

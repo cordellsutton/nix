@@ -19,6 +19,7 @@
 					modules = [		./configuration.nix 
 									./automount.nix
 									./network.nix
+									./program_config
 									./env_pkgs.nix
 								];
 					};
