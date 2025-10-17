@@ -1,0 +1,134 @@
+Ah — that’s a classic GPG-on-NixOS issue 🔐
+
+This happens because **GPG needs a pinentry program** (the tool that prompts you for a passphrase), but NixOS isolates packages by default — so GPG can’t find one unless you **explicitly install and configure it**.
+
+Let’s go through the fix step-by-step 👇
+
+---
+
+## 🧩 1. Why this happens
+
+When you run:
+
+```bash
+gpg --full-generate-key
+```
+
+GPG spawns `gpg-agent`, which in turn looks for a `pinentry` binary (like `pinentry-curses`, `pinentry-tty`, or `pinentry-qt`).
+
+On NixOS, those programs aren’t on `$PATH` unless you add them in your configuration, so `gpg-agent` fails:
+
+```
+gpg: agent_genkey failed: No pinentry
+Key generation failed: No pinentry
+```
+
+---
+
+## 🧰 2. Add a `pinentry` package
+
+Pick one of these (depending on your environment):
+
+* `pinentry-curses` → works in the terminal
+* `pinentry-tty` → minimal, good for headless servers
+* `pinentry-qt` or `pinentry-gnome3` → for GUI prompts
+
+### In `/etc/nixos/configuration.nix`:
+
+```nix
+{ config, pkgs, ... }:
+
+{
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-curses;  # or pkgs.pinentry-qt
+  };
+
+  environment.systemPackages = with pkgs; [
+    gnupg
+  ];
+}
+```
+
+Then rebuild your system:
+
+```bash
+sudo nixos-rebuild switch
+```
+
+---
+
+## 🧠 3. Verify that the agent is running and using the right pinentry
+
+Check that GPG agent is running:
+
+```bash
+gpgconf --list-dirs agent-socket
+```
+
+And test your pinentry:
+
+```bash
+gpg-connect-agent "GETINFO pinentry_program" /bye
+```
+
+It should return something like:
+
+```
+D /nix/store/...-pinentry-curses/bin/pinentry-curses
+OK
+```
+
+If not, restart the agent:
+
+```bash
+gpgconf --kill gpg-agent
+gpgconf --launch gpg-agent
+```
+
+---
+
+## 🧪 4. Retry key generation
+
+Now try again:
+
+```bash
+gpg --full-generate-key
+```
+
+You should get a working pinentry prompt — either in your terminal or as a GUI pop-up, depending on which one you picked.
+
+---
+
+## 🧩 5. Optional: configure system-wide or user-level
+
+If you prefer a **user-level** configuration (no rebuild):
+
+```bash
+export GPG_TTY=$(tty)
+gpgconf --kill gpg-agent
+gpgconf --launch gpg-agent
+```
+
+and ensure you have a pinentry in your `PATH`, e.g.:
+
+```bash
+nix-shell -p pinentry-curses
+```
+
+---
+
+### ✅ Summary
+
+| Step | Action                                 |
+| ---- | -------------------------------------- |
+| 1    | Add `pinentry` package to NixOS config |
+| 2    | Enable `programs.gnupg.agent`          |
+| 3    | Rebuild system                         |
+| 4    | Restart GPG agent                      |
+| 5    | Retry key generation                   |
+
+---
+
+Would you like me to show the **exact configuration** if you’re using Home Manager (instead of system-level NixOS config)?
+
