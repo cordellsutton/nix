@@ -4,6 +4,10 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+   bridge-utils
+   mesa
+   gh
+   universal-ctags
    wget	
    nicotine-plus	   
    ffmpeg
@@ -43,7 +47,7 @@
    gnumake
    bc
    gdb
-   octave
+   octaveFull
    gnuplot
    file
    gnupg
@@ -52,5 +56,6 @@
    go
    minicom
    qemu 
+   ncurses
    ];
 }

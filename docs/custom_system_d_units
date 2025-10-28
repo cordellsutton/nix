@@ -1,0 +1,38 @@
+{ config, pkgs, ... }:
+
+{
+  # Define your custom systemd service named "my-custom-service"
+  systemd.services.my-custom-service = {
+    # 1. Basic Unit options
+    description = "My awesome custom service";
+
+    # 2. Installation/Targeting
+    # This determines when the service starts (e.g., after the system is fully booted)
+    wantedBy = [ "multi-user.target" ];
+
+    # 3. Service configuration
+    serviceConfig = {
+      # The command to execute (use absolute paths to executables)
+      # ${pkgs.bash} ensures the bash executable from the Nix store is used.
+      ExecStart = "${pkgs.bash}/bin/bash -c '${pkgs.hello}/bin/hello > /tmp/hello.log'";
+
+      # Set the user and group to run the service as (important for security)
+      User = "myuser"; # Replace with an existing user or create one with users.extraUsers
+      Group = "users";
+
+      # Type of service (e.g., simple, forking, oneshot)
+      Type = "oneshot";
+
+      # Optional: Restart policy
+      # Restart = "always";
+      # RestartSec = 5;
+    };
+
+    # 4. Enable the service
+    enable = true;
+
+    # Optional: Set a custom PATH for the service's environment
+    # This is often needed when ExecStart uses programs not in the default NixOS system environment.
+    path = with pkgs; [ bash coreutils ];
+  };
+}

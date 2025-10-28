@@ -6,7 +6,7 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [ 
       ./hardware-configuration.nix
     ];
 
@@ -17,7 +17,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "seras"; 
-  networking.networkmanager.enable = true;
+  networking.networkmanager.enable = false;
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -34,14 +34,9 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  programs.ssh.extraConfig = "AddKeysToAgent yes";
-
-  # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
-
-
-  # Enable sound with pipewire.
+  hardware.graphics.enable = true;
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -49,16 +44,8 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
 
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.planimal = {
     isNormalUser = true;
     description = "planimal";
@@ -82,15 +69,12 @@
 	nerd-fonts.fira-code
   	nerd-fonts.droid-sans-mono	
 	];
+	#these both seem needed to get fonts to render properly in terminator?
   fonts.fontconfig.useEmbeddedBitmaps = true;
   fonts.fontconfig.antialias = true;
 
-  system.stateVersion = "25.05"; # Did you read the comment?
-
-#experimental features. Disable this is you're having issues.
+  system.stateVersion = "25.05"; 
   nix.settings.experimental-features = ["nix-command" "flakes"];
-
-
 
 
 
