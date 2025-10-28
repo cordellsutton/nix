@@ -49,7 +49,7 @@
   users.users.planimal = {
     isNormalUser = true;
     description = "planimal";
-    extraGroups = [ "networkmanager" "wheel" "nixbld" "dialout"];
+    extraGroups = [ "wheel" "nixbld" "dialout"];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
