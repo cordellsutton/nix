@@ -9,18 +9,44 @@
 {
 	networking.useNetworkd = true;
 	systemd.network.enable = true;
+	
 
-	systemd.network.networks."10-enp3s0-dhcp" = {
-  		matchConfig.Name = "enp3s0"; 
-  		networkConfig.DHCP = "ipv4"; 
-		address = [
-		#	"192.168.0.100/24"
-			];
-		routes = [
-		{ Gateway = "192.168.0.1";}
-			];
-		linkConfig.RequiredForOnline = "routable";
+	#tap interface
+	systemd.network.netdevs."qemu-tap" = {
+  		enable = true;
+  		netdevConfig = {
+			Kind = "tap";
+			Name = "qemu-tap";
+		};	
+		tapConfig = {
+				User = "planimal";
+		};
+  		# macAddress = "52:54:00:ff:00:01";
 	};
+	systemd.network.networks."40-qemu-tap-to-br0" = {
+	  matchConfig.Name = "qemu-tap";
+	  networkConfig = {
+		# Specify the bridge interface it should belong to
+		Bridge = "br0";
+		DHCP = "no";
+	  };
+	  linkConfig.RequiredForOnline = "yes";
+	};	
+
+	#bridge interface, linked with enps30
+	networking.bridges = {
+		"br0" = {
+			interfaces = [ "enp3s0" ];
+		};
+	};
+	systemd.network.networks."20-br0" = {
+		matchConfig.Name = "br0";
+		address = [ 
+			"192.168.0.100/24"
+			];
+   	gateway = [ "192.168.0.1" ];
+   	dns = [ "192.168.0.101" ];
+	};	
 
 	networking.nameservers = [ "192.168.0.101" ];
 	services.resolved = {
@@ -37,9 +63,20 @@
 	'';
 	};
 
-
-
-
-
-
 }
+
+
+
+
+
+#	systemd.network.networks."10-enp3s0-dhcp" = {
+#  		matchConfig.Name = "enp3s0"; 
+#  		#networkConfig.DHCP = "ipv4"; 
+#		address = [
+#			"192.168.0.100/24"
+#			];
+#		routes = [
+#		{ Gateway = "192.168.0.1";}
+#			];
+#		linkConfig.RequiredForOnline = "routable";
+#	};
