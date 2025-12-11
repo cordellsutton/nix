@@ -4,7 +4,14 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+   btop 
+    libbpf
+    libpcap
+   cryptsetup
+   glibc 
+   cmake
    bridge-utils
+   vscode
    mesa
    gh
    universal-ctags
@@ -15,7 +22,7 @@
    yt-dlp
    inetutils	
    librewolf
-   vim
+   vim-full
    terminator
    transmission_4-qt
    neofetch

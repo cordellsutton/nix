@@ -45,10 +45,10 @@
 			"192.168.0.100/24"
 			];
    	gateway = [ "192.168.0.1" ];
-   	dns = [ "192.168.0.101" ];
+   	dns = [ "9.9.9.9" ];
 	};	
 
-	networking.nameservers = [ "192.168.0.101" ];
+	networking.nameservers = [ "9.9.9.9" ];
 	services.resolved = {
 		enable = true;
 		domains = ["~." ];
