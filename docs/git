@@ -20,8 +20,20 @@ git commit -m
 git remote add origin git@github.com:cordellsutton/nix.git
 //make sure the config file specifies this in .git, it defaults to https and
 //will ask for a password
+//origin is just origin, does not change.
+
+
 
 git push -u origin master //master is the name of the branch, so change that to
 whatever. find your current branch via
 git branch
+
+
+/////////////////////////////////////////////
+gh
+
+gh repo list username
+
+gh repo create repo-name
+
 
