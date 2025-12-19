@@ -4,9 +4,10 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+   obs-studio 
    btop 
-    libbpf
-    libpcap
+   libbpf
+   libpcap
    cryptsetup
    glibc 
    cmake
