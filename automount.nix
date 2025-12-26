@@ -16,15 +16,15 @@
 	 "exec"     
    ];
  };
-  fileSystems."/mnt/nvme" = {
-   device = "/dev/disk/by-partuuid/38078f44-01";
-   fsType = "ext4";
-   options = [ 
-     "defaults"     
-     "users" 
-     "nofail" 
-	 "rw"     
-	 "exec"     
-   ];
- };
+#  fileSystems."/mnt/nvme" = {
+#   device = "/dev/disk/by-partuuid/38078f44-01";
+#   fsType = "ext4";
+#   options = [ 
+#     "defaults"     
+#     "users" 
+#     "nofail" 
+#	 "rw"     
+#	 "exec"     
+#   ];
+# };
 }

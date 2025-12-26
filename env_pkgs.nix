@@ -4,6 +4,11 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+    libusb1
+    gcc-arm-embedded
+    stlink
+    sillytavern
+    ihaskell 
    obs-studio 
    btop 
    libbpf

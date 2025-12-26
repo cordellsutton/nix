@@ -45,11 +45,11 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
+  users.groups = [ "plugdev" ];
   users.users.planimal = {
     isNormalUser = true;
     description = "planimal";
-    extraGroups = [ "wheel" "nixbld" "dialout"];
+    extraGroups = [ "wheel" "nixbld" "dialout" "plugdev"];
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird

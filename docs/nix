@@ -1,0 +1,108 @@
+inix-build → nix build
+
+Old command: nix-build
+
+This command was used to build Nix expressions or derivations, typically specified via a default.nix file or a package expression.
+
+New command: nix build
+
+In flakes, the nix build command is used to build the outputs specified in a flake.nix. Flakes introduce a more structured approach, where flake.nix defines inputs and outputs.
+
+
+
+
+
+
+nix-collect-garbage → nix flake prune
+
+Old command: nix-collect-garbage
+
+This command was used to remove unused Nix store paths, freeing up disk space.
+
+New command: nix flake prune
+
+The flake command nix flake prune is more specific to cleaning up unused flake-based packages, builds, and outputs.
+
+
+nix-env → nix profile
+
+Old command: nix-env
+
+The nix-env command was traditionally used to manage user profiles, installing, upgrading, or removing packages.
+
+New command: nix profile
+
+Flakes have introduced the nix profile command for managing user environments in a more reproducible way. This new command allows for installing, upgrading, and switching profiles defined by flakes.
+
+			search for pkgs => nix search github:nixos/nixpkgs package
+
+
+
+
+
+4. nixos-rebuild (for system configurations) → nix build
+
+Old command: nixos-rebuild
+
+On NixOS, nixos-rebuild is used for rebuilding the system configuration (e.g., packages, services, system settings).
+
+New command: nix build (via flakes)
+
+In flakes, the nix build command allows you to specify system configurations and deploy them declaratively, including nixosConfigurations from a flake.nix file.
+
+Example (Old):
+
+sudo nixos-rebuild switch
+
+
+Example (New):
+
+nix build .#nixosConfigurations.<hostname>.config.system.build.toplevel
+
+
+The flake-based nix build command allows for rebuilding the NixOS configuration from a flake, specifying the system configuration output more directly.
+
+
+
+nix-shell → nix develop
+
+Old command: nix-shell
+
+nix-shell was used to enter an environment with specific dependencies, often defined in a shell.nix file.
+
+New command: nix develop
+
+With flakes, the new nix develop command is used to enter a development
+environment, often specified within a flake.nix. This is more in line with the
+flake-based structure, offering greater reproducibility.
+
+
+6. nix-store --gc → nix store gc
+
+Old command: nix-store --gc
+
+This command was used to perform garbage collection on the Nix store to free up space by removing unused store paths.
+
+New command: nix store gc
+
+Flakes don’t directly replace this command, but the general garbage collection process for unused store paths is now part of the newer nix store gc command.
+
+
+
+
+nix-build for installable packages → nix run
+
+Old command: nix-build was used to build specific derivations and installable packages from a default.nix.
+
+New command: nix run
+
+For running executable packages or apps directly from a flake, nix run replaces the traditional nix-build approach to building and executing packages.
+
+
+nix-channel → Flake-based Channel Management
+
+Old command: nix-channel
+
+The nix-channel command was used for managing Nixpkgs channels (e.g., nixpkgs or custom channels) to update the state of available package sets.
+
+New command: Flake-based channels are fully integrated into flakes, removing the need for nix-channel and channel updates. Flakes make channel management obsolete, as everything is tracked by the flake.nix file itself.
