@@ -106,3 +106,16 @@ Old command: nix-channel
 The nix-channel command was used for managing Nixpkgs channels (e.g., nixpkgs or custom channels) to update the state of available package sets.
 
 New command: Flake-based channels are fully integrated into flakes, removing the need for nix-channel and channel updates. Flakes make channel management obsolete, as everything is tracked by the flake.nix file itself.
+
+
+find absolute path of package - --raw gives package location, minus this gives
+the derication
+nix eval --raw nixpkgs#packagename.outPath
+
+
+
+inspect all options for a running setting
+nix repl .#nixosConfigurations.seras
+then once in repl
+options.services.displayManager.sddm 
+or whatever else you're looking for

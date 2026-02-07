@@ -4,11 +4,19 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    libusb1
-    gcc-arm-embedded
-    stlink
-    sillytavern
-    ihaskell 
+   fontconfig 
+    opencode 
+   sdl3 
+   raylib 
+   gtk4 
+   edk2
+   platformio
+   rustc
+   cargo
+   libusb1
+   gcc-arm-embedded
+   stlink
+   ihaskell 
    obs-studio 
    btop 
    libbpf
@@ -17,10 +25,8 @@
    glibc 
    cmake
    bridge-utils
-   vscode
    mesa
    gh
-   universal-ctags
    wget	
    nicotine-plus	   
    ffmpeg

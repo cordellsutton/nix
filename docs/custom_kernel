@@ -1,0 +1,22 @@
+{ config, pkgs, lib, ... }: # This is the standard header
+
+let
+  myCustomKernel = pkgs.linuxKernel.manualConfig {
+    inherit (pkgs) stdenv;
+    src = pkgs.fetchurl {
+      url = "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.tar.xz";
+      # Make sure this hash is correct for the file you are downloading!
+      hash = "sha256-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX="; 
+    };
+    version = "6.12-custom";
+    configfile = ./my-kernel-config; # Ensure this file exists in the same folder
+    allowImportFromDerivation = true;
+  };
+in
+{
+  # ... your existing configuration ...
+
+  boot.kernelPackages = pkgs.linuxPackagesFor myCustomKernel;
+
+  # ... the rest of your settings ...
+}

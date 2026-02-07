@@ -45,7 +45,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-  users.groups = [ "plugdev" ];
   users.users.planimal = {
     isNormalUser = true;
     description = "planimal";
@@ -75,7 +74,13 @@
 
   system.stateVersion = "25.05"; 
   nix.settings.experimental-features = ["nix-command" "flakes"];
-
+  
+  services.udev.extraRules = ''
+    # RP2040 Bootloader mode (BOOTSEL)
+    SUBSYSTEMS=="usb", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="0003", MODE="0660", GROUP="dialout"
+    # RP2040 USB Serial (CDC)
+    SUBSYSTEMS=="usb", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="000a", MODE="0660", GROUP="dialout"
+'';
 
 
 #virtualization stuff
@@ -83,6 +88,5 @@
 	users.groups.libvirtd.members = ["planimal"];
 	virtualisation.libvirtd.enable = true;
 	virtualisation.spiceUSBRedirection.enable = true;
-	
 
 }

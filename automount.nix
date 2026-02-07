@@ -13,7 +13,8 @@
      "defaults"     
      "users" 
      "nofail" 
-	 "exec"     
+     "exec" 
+     "noatime"    
    ];
  };
 #  fileSystems."/mnt/nvme" = {
