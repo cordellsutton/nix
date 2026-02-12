@@ -119,3 +119,9 @@ nix repl .#nixosConfigurations.seras
 then once in repl
 options.services.displayManager.sddm 
 or whatever else you're looking for
+
+
+get a flake metadata from git
+nix flake metadata github:9001/copyparty
+
+

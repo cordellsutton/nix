@@ -9,7 +9,19 @@
 {
 	networking.useNetworkd = true;
 	systemd.network.enable = true;
-	
+
+    networking.firewall = {
+        enable = true;
+        allowedTCPPorts = [ 80 
+                            53
+                            443  
+                            
+                            6697
+                          ];
+        allowedUDPPorts = [ 53 ];
+        logRefusedPackets = true;
+        #trustInterfaces = [ add tap device for qemu? ];
+      };
 
 	#tap interface
 	systemd.network.netdevs."qemu-tap" = {
@@ -42,16 +54,16 @@
 	systemd.network.networks."20-br0" = {
 		matchConfig.Name = "br0";
 		address = [ 
-			"192.168.0.100/24"
+			"192.168.1.100/24"
 			];
-   	gateway = [ "192.168.0.1" ];
+   	gateway = [ "192.168.1.1" ];
    	dns = [ "9.9.9.9" ];
 	};	
 
 	networking.nameservers = [ "9.9.9.9" ];
 	services.resolved = {
 		enable = true;
-		domains = ["~." ];
+		settings.Resolve.Domains = ["~." ];
 	};
 
 	networking.useDHCP = false;
