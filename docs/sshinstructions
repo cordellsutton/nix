@@ -1,0 +1,189 @@
+Excellent question — this is a **very common task** for NixOS users who want SSH keys to be available automatically (for Git, remote servers, etc.).
+
+Let’s go through the different ways to **enable `ssh-agent`** and **load your SSH keys** in your NixOS `configuration.nix` — both for **system-wide** and **per-user** setups.
+
+---
+
+## 🧩 1. Background — how `ssh-agent` works
+
+`ssh-agent` is a small background process that holds your private keys in memory and provides them to `ssh`, `git`, etc., when needed.
+Normally you start it when your session begins (via PAM, a desktop session, or manually).
+
+NixOS can manage this for you.
+
+---
+
+## 🧰 2. The simple way: use `programs.ssh.startAgent`
+
+In your `/etc/nixos/configuration.nix`, add:
+
+```nix
+{
+  programs.ssh = {
+    startAgent = true;
+    extraConfig = ''
+      AddKeysToAgent yes
+    '';
+  };
+}
+```
+
+### What this does:
+
+* Starts an `ssh-agent` automatically when you log in (for all users, unless overridden).
+* The `AddKeysToAgent yes` line tells `ssh` to automatically add your key to the agent when used.
+
+Then rebuild your configuration:
+
+```bash
+sudo nixos-rebuild switch
+```
+
+---
+
+## 🔑 3. Automatically add a key (using user’s configuration)
+
+If you want a specific key to be added automatically, you can do this via `environment.variables` or user shell initialization.
+
+For example:
+
+```nix
+{
+  programs.ssh = {
+    startAgent = true;
+  };
+
+  # Optional: make sure SSH_AUTH_SOCK is visible in all shells
+  environment.variables.SSH_AUTH_SOCK = "/run/user/${toString config.users.users.youruser.uid}/ssh-agent";
+
+  users.users.youruser = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    shell = pkgs.zsh;
+  };
+}
+```
+
+Then, inside your user’s shell (e.g. `~/.bashrc` or `~/.zshrc`):
+
+```bash
+ssh-add ~/.ssh/id_ed25519
+```
+
+You can make this automatic with Nix if you use **home-manager** (see below).
+
+---
+
+## 🏠 4. The Home Manager way (recommended for per-user setup)
+
+If you use **Home Manager** (which integrates nicely with NixOS), it can manage the agent and your keys declaratively:
+
+```nix
+{
+  programs.ssh = {
+    enable = true;
+    startAgent = true;
+    forwardAgent = true;
+
+    # Automatically add keys when home-manager session starts
+    extraConfig = ''
+      AddKeysToAgent yes
+      IdentityFile ~/.ssh/id_ed25519
+    '';
+
+    # Optional: preload certain keys
+    matchBlocks = {
+      "github.com" = {
+        identityFile = "~/.ssh/id_ed25519";
+      };
+    };
+  };
+}
+```
+
+To actually add the key at login, Home Manager provides:
+
+```nix
+services.ssh-agent = {
+  enable = true;
+  identities = [ "~/.ssh/id_ed25519" ];
+};
+```
+
+That tells Nix to start `ssh-agent` automatically and run `ssh-add` for that key on login.
+
+Then rebuild:
+
+```bash
+home-manager switch
+```
+
+---
+
+## ⚙️ 5. Example full NixOS + Home Manager integration
+
+If you’re managing both through a flake, this might look like:
+
+```nix
+{
+  description = "NixOS config with ssh-agent";
+
+  outputs = { self, nixpkgs, home-manager, ... }: {
+    nixosConfigurations.mysystem = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./hardware-configuration.nix
+        {
+          users.users.me = {
+            isNormalUser = true;
+            extraGroups = [ "wheel" "networkmanager" ];
+          };
+
+          programs.ssh.startAgent = true;
+        }
+      ];
+    };
+
+    homeConfigurations.me = home-manager.lib.homeManagerConfiguration {
+      pkgs = import nixpkgs { system = "x86_64-linux"; };
+      modules = [
+        {
+          services.ssh-agent = {
+            enable = true;
+            identities = [ "~/.ssh/id_ed25519" ];
+          };
+        }
+      ];
+    };
+  };
+}
+```
+
+---
+
+## 🔍 6. Quick verification
+
+After rebuilding:
+
+```bash
+echo $SSH_AUTH_SOCK
+ssh-add -l
+```
+
+If `ssh-agent` is running, `$SSH_AUTH_SOCK` will point to a socket, and `ssh-add -l` will show your keys.
+
+---
+
+## ✅ Summary
+
+| Goal                                      | Recommended method                                 |
+| ----------------------------------------- | -------------------------------------------------- |
+| Just want ssh-agent always running        | `programs.ssh.startAgent = true;`                  |
+| Want specific keys auto-loaded (per-user) | Use Home Manager → `services.ssh-agent.identities` |
+| Want declarative multi-user setup         | Combine both system and user-level configs         |
+| Want to add keys interactively            | Use `ssh-add` manually in shell                    |
+
+---
+
+Would you like me to show you a **purely system-level config** (no Home Manager) that declaratively adds specific keys for all users, using NixOS services?
+

@@ -4,6 +4,8 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+   nasm
+   vscode 
    picocom
    irssi 
    fontconfig 
