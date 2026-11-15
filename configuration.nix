@@ -10,6 +10,33 @@
       ./hardware-configuration.nix
     ];
 
+#added for gtx
+# 1. Enable unfree packages (required for official Nvidia drivers)
+nixpkgs.config.allowUnfree = true;
+
+# 2. Enable OpenGL / Hardware Acceleration
+hardware.graphics.enable = true;
+
+# 3. Load the proprietary Nvidia driver
+services.xserver.videoDrivers = [ "nvidia" ];
+
+hardware.nvidia = {
+  # Modesetting is required for modern Wayland/X11 compositors
+  modesetting.enable = true;
+
+  # Power management is recommended to fix suspension/sleep issues
+  powerManagement.enable = false;
+
+  # Use the production driver (do NOT set fine-grained 'open' drivers, 
+  # as Nvidia's open-source module also drops support for Pascal cards)
+  open = false;
+
+  # Select the appropriate driver version (the standard package is fine for a GTX 1070)
+  package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
+};
+#end added for gtx
+
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.tmp.cleanOnBoot = true;
@@ -34,41 +61,10 @@
     LC_TIME = "en_US.UTF-8";
   };
 
+  users.groups.plugdev = {};
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
-  hardware.graphics.enable = true;
-  #added
-  services.xserver.videoDrivers = ["nvidia"];
-  hardware.nvidia = {
-
-    # Modesetting is required.
-    modesetting.enable = true;
-
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    # Enable this if you have graphical corruption issues or application crashes after waking
-    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
-    # of just the bare essentials.
-    powerManagement.enable = false;
-
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
-
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
-    # Only available from driver 515.43.04+
-    open = false;
-
-    # Enable the Nvidia settings menu,
-	# accessible via `nvidia-settings`.
-    nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
+  #hardware.graphics.enable = true;
 
 
 
@@ -108,7 +104,7 @@
   fonts.fontconfig.useEmbeddedBitmaps = true;
   fonts.fontconfig.antialias = true;
 
-  system.stateVersion = "25.05"; 
+  system.stateVersion = "26.05"; 
   nix.settings.experimental-features = ["nix-command" "flakes"];
   
   services.udev.extraRules = ''
@@ -116,13 +112,12 @@
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="0003", MODE="0660", GROUP="dialout"
     # RP2040 USB Serial (CDC)
     SUBSYSTEMS=="usb", ATTRS{idVendor}=="2e8a", ATTRS{idProduct}=="000a", MODE="0660", GROUP="dialout"
+  	SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3748", MODE="0660", GROUP="plugdev"
 '';
-  programs.steam = {
-      enable = true;
-      remotePlay.openFirewall = true; 
-     # dedicatedServer.openFirewall = true; 
-     # localNetworkGameTransfers.openFirewall = true;
-    };
+
+
+
+
 
 #virtualization stuff
 	programs.virt-manager.enable = true;

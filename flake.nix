@@ -8,7 +8,7 @@
 	};
 
 
-	outputs = {self, nixpkgs, ...}:
+	outputs = {self, nixpkgs,  ...}@inputs:
 		let
 			lib = nixpkgs.lib;
 
@@ -16,10 +16,11 @@
 			nixosConfigurations = {
 				seras = lib.nixosSystem {
 					system = "x86_64-linux";
-					modules = [		./configuration.nix 
-									./automount.nix
+					specialArgs = { inherit inputs;};
+					modules = [			./configuration.nix 
+									#./automount.nix
 									./network.nix
-									./program_config.nix
+									#./program_config.nix
 									./env_pkgs.nix
 								];
 					};

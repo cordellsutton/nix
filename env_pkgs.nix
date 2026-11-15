@@ -1,80 +1,64 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   nixpkgs.config.allowUnfree = true;
+  
+  
+  programs.steam = {
+  enable = true;
+  };
+
+
+
 
   environment.systemPackages = with pkgs; [
-   nasm
-   vscode 
-   picocom
-   irssi 
-   fontconfig 
-   sdl3 
-   raylib 
-   gtk4 
-   edk2
-   platformio
-   libusb1
-   gcc-arm-embedded
-   stlink
-   ihaskell 
-   btop 
-   libbpf
-   libpcap
-   cryptsetup
-   glibc 
-   cmake
-   bridge-utils
-   mesa
-   gh
-   wget	
-   nicotine-plus	   
-   ffmpeg
-   usbutils
-   yt-dlp
-   inetutils	
-   librewolf
-   vim-full
-   terminator
-   transmission_4-qt
-   neofetch
-   scrot
-   kdePackages.okular
-   libreoffice-qt6-fresh
-   kdePackages.spectacle
-   man-pages
-   dig
-   qemu
-   libvirt
-   virglrenderer
-   libqalculate
-   mpv
-   gcc
-   home-manager
-   git
-   feh
-   pkg-config
-   gparted
-   nmap
-   mdadm
-   kicad
-   ghidra
-   freecad
-   python3
-   bat
-   tinycc
-   gnumake
-   bc
-   gdb
-   octaveFull
-   gnuplot
-   file
-   gnupg
-   pinentry-tty
-   texliveTeTeX
-   go
-   minicom
-   qemu 
-   ncurses
-   ];
+		ctags
+		android-file-transfer
+		ollama
+		rustc
+		kicad
+		arduino-cli
+		ngspice
+		libreoffice
+		tree
+		opencode
+		cargo
+		picocom
+		gh
+		fontconfig 
+		gcc-arm-embedded
+		stlink
+		btop 
+		glibc 
+		bridge-utils
+		wget	
+		thunderbird
+		nicotine-plus	   
+		ffmpeg
+		yt-dlp
+		vim-full
+		terminator
+		transmission_4-qt
+		rpi-imager 
+		man-pages
+		libqalculate
+		mpv
+		gcc
+		git
+		feh
+		pkg-config
+		gparted
+		nmap
+		python3
+		bat
+		gnumake
+		bc
+		gdb
+		octaveFull
+		file
+		qemu 
+		firefox
+		rsync
+		ncurses
+ ];
 }
